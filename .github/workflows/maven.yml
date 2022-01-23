@@ -1,12 +1,7 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
 name: Java CI with Maven
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
     branches: [ main ]
 
 jobs:
@@ -15,12 +10,56 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 11
-      uses: actions/setup-java@v2
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-        cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+
+      - name: Build & Push Docker Image To Aliyun Docker Hub
+        id: buildAndPushImage
+        uses: risfeng/docker-image-build-push-action@v1.0
+        with:
+          registry_url: 'registry.cn-shanghai.aliyuncs.com'
+          namespaces: ${{ secrets.ALIYUN_IMAGES_HUB_USER_NAME }}
+          repository_name: 'agile_train'
+          user_name: ${{ secrets.ALIYUN_IMAGES_HUB_USER_NAME }}
+          password: ${{ secrets.ALIYUN_IMAGES_HUB_PASSWORD }}
+          image_version: 'latest'
+          docker_file: '.'
+
+      - name: Get Pre Step Result Output image_pull_url
+        run: echo "The url was ${{ steps.buildAndPushImage.outputs.image_pull_url }}"
+
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: 106.14.139.101
+          username: root
+          password: ${{ secrets.PWD }}
+          command_timeout: '30m'
+          script: |
+#            cd /root/ies-sim/ies-sim-backend
+#            echo '${{ secrets.PWD }}' | sudo -S service docker start
+#            echo '${{ secrets.PWD }}' | sudo -S docker stop ies-sim-backend
+#            echo '${{ secrets.PWD }}' | sudo -S docker rm ies-sim-backend
+#            echo '${{ secrets.PWD }}' | sudo -S docker rmi ${{ steps.buildAndPushImage.outputs.image_pull_url }}
+#            echo '${{ secrets.PWD }}' | sudo -S docker login --username=${{ secrets.ALIYUN_IMAGES_HUB_USER_NAME }} --password=${{ secrets.ALIYUN_IMAGES_HUB_PASSWORD }} registry.cn-shanghai.aliyuncs.com
+#            echo '${{ secrets.PWD }}' | sudo -S docker pull ${{ steps.buildAndPushImage.outputs.image_pull_url }}
+#            echo '${{ secrets.PWD }}' | sudo -S docker-compose -f ./docker-compose.yml up -d ies-sim-backend
+            cd /root/lmt/dockerProject
+            service docker start
+            docker stop train
+            docker rm train
+            docker rmi ${{ steps.buildAndPushImage.outputs.image_pull_url }}
+            docker login --username=${{ secrets.ALIYUN_IMAGES_HUB_USER_NAME }} --password=${{ secrets.ALIYUN_IMAGES_HUB_PASSWORD }} registry.cn-shanghai.aliyuncs.com
+            docker pull ${{ steps.buildAndPushImage.outputs.image_pull_url }}
+            docker images
+            docker ps -a
+            docker run -d -p 8080:8080 --name train train
+            docker ps -a
