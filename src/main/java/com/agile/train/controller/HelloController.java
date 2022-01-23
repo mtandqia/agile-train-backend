@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController {
 
-    @GetMapping("/hello")
+    @GetMapping("/hello_world")
     public String hello(){
         return "hello world!";
     }
 
-    @GetMapping("/h")
+    @GetMapping("/hello")
     public String h(@RequestParam String inp){
         return "hello "+inp+"!";
     }
