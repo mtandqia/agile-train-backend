@@ -26,7 +26,7 @@ jobs:
         uses: risfeng/docker-image-build-push-action@v1.0
         with:
           registry_url: 'registry.cn-shanghai.aliyuncs.com'
-          namespaces: ${{ secrets.ALIYUN_IMAGES_HUB_USER_NAME }}
+          namespaces: 'agile_train'
           repository_name: 'agile_train'
           user_name: ${{ secrets.ALIYUN_IMAGES_HUB_USER_NAME }}
           password: ${{ secrets.ALIYUN_IMAGES_HUB_PASSWORD }}
