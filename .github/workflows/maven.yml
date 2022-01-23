@@ -46,9 +46,9 @@ jobs:
           script: |
             cd /root/lmt/dockerProject
             service docker start
-            docker stop train
-            docker rm train
+            docker stop mytrain
+            docker rm mytrain
             docker rmi ${{ steps.buildAndPushImage.outputs.image_pull_url }}
             docker login --username=${{ secrets.ALIYUN_IMAGES_HUB_USER_NAME }} --password=${{ secrets.ALIYUN_IMAGES_HUB_PASSWORD }} registry.cn-shanghai.aliyuncs.com
             docker pull ${{ steps.buildAndPushImage.outputs.image_pull_url }}
-            docker run -d -p 8080:8080 registry.cn-shanghai.aliyuncs.com/agile_train/agile_train
+            docker run --name mytrain -d -p 8080:8080 ${{ steps.buildAndPushImage.outputs.image_pull_url }}
