@@ -51,7 +51,4 @@ jobs:
             docker rmi ${{ steps.buildAndPushImage.outputs.image_pull_url }}
             docker login --username=${{ secrets.ALIYUN_IMAGES_HUB_USER_NAME }} --password=${{ secrets.ALIYUN_IMAGES_HUB_PASSWORD }} registry.cn-shanghai.aliyuncs.com
             docker pull ${{ steps.buildAndPushImage.outputs.image_pull_url }}
-            docker images
-            docker ps -a
             docker run -d -p 8080:8080 --name train train
-            docker ps -a
