@@ -51,4 +51,4 @@ jobs:
             docker rmi ${{ steps.buildAndPushImage.outputs.image_pull_url }}
             docker login --username=${{ secrets.ALIYUN_IMAGES_HUB_USER_NAME }} --password=${{ secrets.ALIYUN_IMAGES_HUB_PASSWORD }} registry.cn-shanghai.aliyuncs.com
             docker pull ${{ steps.buildAndPushImage.outputs.image_pull_url }}
-            docker run --name mytrain -d -p 8080:8080 ${{ steps.buildAndPushImage.outputs.image_pull_url }}
+            docker run --name mytrain -d -p 8080:8080 -v /root/lmt/file:/root/lmt/file ${{ steps.buildAndPushImage.outputs.image_pull_url }}
