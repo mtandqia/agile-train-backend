@@ -13,5 +13,10 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
                 .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
+
+        //addResourceHandler是指你想在url请求的路径
+        //addResourceLocations是图片存放的真实路径
+        registry.addResourceHandler(PathConstants.URL+"**").addResourceLocations("file:"+PathConstants.PATH);
+
     }
 }
