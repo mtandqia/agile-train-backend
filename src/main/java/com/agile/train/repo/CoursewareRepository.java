@@ -13,5 +13,7 @@ import java.util.Optional;
 @Repository
 public interface CoursewareRepository extends MongoRepository<Courseware,String> {
 
+    Optional<Courseware> findOneById(String coursewareId);
+
     Optional<Courseware> findOneByCoursewareName(String fileName);
 }

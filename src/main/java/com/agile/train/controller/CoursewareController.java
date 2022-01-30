@@ -7,10 +7,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * @author Mengting Lu
@@ -29,5 +30,13 @@ public class CoursewareController {
     @ApiImplicitParam(name = "courseware", value = "文件")
     public ResultVM<Courseware> uploadFile(MultipartFile file) {
         return coursewareService.uploadFile(file);
+    }
+
+    @GetMapping(value="")
+    //TODO: permission
+    @ApiOperation(value = "下载课件",notes = "TEACHER和STUDENT有权限调用此接口")
+    @ApiImplicitParam(name="coursewareId", value="课件id")
+    public ResponseEntity<byte[]> downloadFile(@RequestParam String coursewareId) throws IOException {
+        return coursewareService.downloadFile(coursewareId);
     }
 }

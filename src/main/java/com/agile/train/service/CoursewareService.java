@@ -4,14 +4,23 @@ import com.agile.train.VO.ResultVM;
 import com.agile.train.config.PathConstants;
 import com.agile.train.entity.Courseware;
 import com.agile.train.exception.CoursewareAlreadyExistException;
+import com.agile.train.exception.CoursewareNotFoundException;
 import com.agile.train.exception.NullParameterException;
 import com.agile.train.repo.CoursewareRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -20,6 +29,7 @@ import java.util.Optional;
  * @date 2022/1/30 14:12
  */
 @Service
+@Slf4j
 public class CoursewareService {
     @Autowired
     CoursewareRepository coursewareRepository;
@@ -51,4 +61,32 @@ public class CoursewareService {
         }
     }
 
+    public ResponseEntity<byte[]> downloadFile(String id) throws IOException {
+        if(id==null){
+            throw new NullParameterException();
+        }
+        Optional<Courseware> optional=coursewareRepository.findOneById(id);
+        if(!optional.isPresent()){
+            throw new CoursewareNotFoundException();
+        }
+        String fileName=optional.get().getCoursewareName();
+        File file=new File(PathConstants.PATH+fileName);
+        FileInputStream fis = new FileInputStream(file);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] b = new byte[1024];
+        int n;
+        while ((n = fis.read(b)) != -1)
+        {
+            bos.write(b, 0, n);
+        }
+        fis.close();
+        bos.close();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+        log.info(fileName);
+        httpHeaders.setContentDispositionFormData("attachment", fileName);
+        //指定以流的形式下载文件
+        httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        return new ResponseEntity<>(bos.toByteArray(), httpHeaders, HttpStatus.CREATED);
+    }
 }
