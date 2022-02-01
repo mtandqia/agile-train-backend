@@ -1,7 +1,7 @@
 package com.agile.train.service;
 
-import com.agile.train.VO.ResultVM;
-import com.agile.train.config.PathConstants;
+import com.agile.train.dto.ResultVM;
+import com.agile.train.constant.PathConstants;
 import com.agile.train.entity.Courseware;
 import com.agile.train.exception.CoursewareAlreadyExistException;
 import com.agile.train.exception.CoursewareNotFoundException;

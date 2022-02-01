@@ -1,4 +1,4 @@
-package com.agile.train.VO;
+package com.agile.train.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

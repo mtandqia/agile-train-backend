@@ -1,4 +1,4 @@
-package com.agile.train.config;
+package com.agile.train.constant;
 
 /**
  * @author Mengting Lu

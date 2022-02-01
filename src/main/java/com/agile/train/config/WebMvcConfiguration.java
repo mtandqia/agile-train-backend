@@ -1,5 +1,6 @@
 package com.agile.train.config;
 
+import com.agile.train.constant.PathConstants;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;

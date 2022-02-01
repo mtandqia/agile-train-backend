@@ -1,6 +1,6 @@
 package com.agile.train.controller;
 
-import com.agile.train.VO.ResultVM;
+import com.agile.train.dto.ResultVM;
 import com.agile.train.entity.Courseware;
 import com.agile.train.service.CoursewareService;
 import io.swagger.annotations.ApiImplicitParam;
