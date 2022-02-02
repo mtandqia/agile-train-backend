@@ -2,6 +2,8 @@ package com.agile.train.service;
 
 import com.agile.train.dto.CommentAddDTO;
 import com.agile.train.dto.QuestionAddDTO;
+import com.agile.train.dto.QuestionAndCommentDTO;
+import com.agile.train.dto.QuestionDTO;
 import com.agile.train.entity.CommentAndUser;
 import com.agile.train.entity.Question;
 import com.agile.train.entity.User;
@@ -10,10 +12,12 @@ import com.agile.train.repo.ForumRepository;
 import com.agile.train.repo.QuestionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Mengting Lu
@@ -86,5 +90,53 @@ public class ForumService {
         }else{
             return null;
         }
+    }
+
+    public QuestionAndCommentDTO getAllComment(String questionId){
+        if(questionId==null){
+            throw new NullParameterException();
+        }
+        //allList就是对这个提问的第一层回复
+        List<CommentAndUser> allList = forumRepository.findAllByQuestionId(questionId);
+        Map<String, CommentAndUser> map = new HashMap<>();
+        List<CommentAndUser> commentAndUserArrayList = new ArrayList<>();
+        for (CommentAndUser c : allList) {
+            if (c.getParentId()==null) {
+                commentAndUserArrayList.add(c);
+            }
+            map.put(c.getId(), c);
+        }
+        for (CommentAndUser c : allList) {
+            if (c.getParentId()!=null) {
+                CommentAndUser parent = map.get(c.getParentId());
+                if (parent == null||parent.getId().equals(c.getId())) { continue; }
+                if (parent.getChildList() == null) {
+                    parent.setChildList(new ArrayList<>());
+                }
+                parent.getChildList().add(c);
+            }
+        }
+        Optional<Question> questionOptional=questionRepository.findById(questionId);
+        String questionContent="";
+        String questionTitle="";
+        if(questionOptional.isPresent()){
+            questionContent=questionOptional.get().getQuestionContent();
+            questionTitle=questionOptional.get().getQuestionTitle();
+        }
+        return new QuestionAndCommentDTO(
+                questionId,
+                questionTitle,
+                questionContent,
+                commentAndUserArrayList
+        );
+    }
+
+    public List<QuestionDTO> getQuestionByKeyword(String keyword, Pageable pageable) {
+        Page<Question> questionPage=questionRepository.findByQuestionTitleLikeOrQuestionContentLike(keyword,keyword,pageable);
+        List<QuestionDTO> questionDTOList=new ArrayList<>();
+        for(Question q:questionPage){
+            questionDTOList.add(new QuestionDTO(q,forumRepository.countByQuestionId(q.getId())));
+        }
+        return questionDTOList;
     }
 }
