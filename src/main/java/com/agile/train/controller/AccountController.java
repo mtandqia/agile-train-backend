@@ -4,6 +4,7 @@ import com.agile.train.dto.ManagedUserVM;
 import com.agile.train.dto.ResultVM;
 import com.agile.train.dto.UserDTO;
 import com.agile.train.entity.User;
+import com.agile.train.exception.InternalServerErrorException;
 import com.agile.train.exception.InvalidPasswordException;
 import com.agile.train.repo.UserRepository;
 import com.agile.train.service.UserService;
@@ -44,6 +45,20 @@ public class AccountController {
             managedUserVm.setLangKey("zh_cn");
         }
         return new ResultVM<User>().success().data(userService.registerUser(managedUserVm, managedUserVm.getPassword(),managedUserVm.getRole()));
+    }
+
+    /**
+     * GET  /account : get the current user.
+     *
+     * @return the current user
+     * @throws RuntimeException 500 (Internal Server Error) if the user couldn't be returned
+     */
+    @GetMapping("/account_own")
+    @ApiOperation(value = "获取用户自身的账户信息",notes = "所有用户都有权限调用")
+    public ResultVM<UserDTO> getAccount() {
+        return new ResultVM<UserDTO>().success().data(
+                new UserDTO(userService.getUserWithAuthorities().orElseThrow(() ->
+                        new InternalServerErrorException("User could not be found"))));
     }
 
     @GetMapping("/account_list")
