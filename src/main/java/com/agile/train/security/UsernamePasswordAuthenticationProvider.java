@@ -56,13 +56,9 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
         return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
     }
 
-    private Set<GrantedAuthority> listUserGrantedAuthorities(List<String> authoritySet) {
+    private Set<GrantedAuthority> listUserGrantedAuthorities(String authority) {
         Set<GrantedAuthority> authorities = new HashSet<>();
-        for (String authority : authoritySet) {
-            authorities.add(new SimpleGrantedAuthority(authority));
-        }
-
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        authorities.add(new SimpleGrantedAuthority(authority));
         return authorities;
     }
 

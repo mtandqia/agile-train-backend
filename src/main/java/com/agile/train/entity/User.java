@@ -62,7 +62,7 @@ public class User implements Serializable {
     private LocalDateTime resetDate = null;
 
     @JsonIgnore
-    private List<String> authorities = new ArrayList<>();
+    private String authorities;
 
     @CreatedDate
     @Field("created_date")

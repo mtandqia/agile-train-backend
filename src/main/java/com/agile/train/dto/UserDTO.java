@@ -44,7 +44,7 @@ public class UserDTO {
 
     private String lastModifiedDate;
 
-    private Set<String> authorities;
+    private String authorities;
 
     public UserDTO() {
         // Empty constructor needed for Jackson.
@@ -57,12 +57,10 @@ public class UserDTO {
         this.imageUrl = user.getImageUrl();
         this.langKey = user.getLangKey();
 
-        this.createdDate = user.getCreatedDate().toString()
-                .replace("T", " ").replace("Z", " ").trim();
+        this.createdDate = user.getCreatedDate().toString();
 
-        this.lastModifiedDate = user.getLastModifiedDate().toString()
-                .replace("T", " ").replace("Z", " ").trim();
+        this.lastModifiedDate = user.getLastModifiedDate().toString();
 
-        this.authorities = new HashSet<>(user.getAuthorities());
+        this.authorities = user.getAuthorities();
     }
 }

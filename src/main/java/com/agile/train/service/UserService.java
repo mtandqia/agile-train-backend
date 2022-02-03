@@ -10,9 +10,12 @@ import com.agile.train.repo.UserRepository;
 import com.agile.train.util.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,15 +54,29 @@ public class UserService {
         newUser.setEmail(userDTO.getEmail().toLowerCase());
         newUser.setImageUrl(userDTO.getImageUrl());
         newUser.setLangKey(userDTO.getLangKey());
+        newUser.setCreatedDate(LocalDateTime.now());
+        newUser.setLastModifiedDate(LocalDateTime.now());
 
-        List<String> authorities = new ArrayList<>();
+       String authorities = "";
         //在这里可以再加上管理员、教师、学生的角色
         if(role.equals(AuthoritiesConstants.STUDENT)||role.equals(AuthoritiesConstants.TEACHER)||role.equals(AuthoritiesConstants.ADMIN)){
-            authorities.add(role);
+            authorities=role;
         }
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
+    }
+
+    public List<UserDTO> getAccountListByRole(String role, String keyword, Pageable pageable) {
+        if(role==null){
+            throw new NullParameterException();
+        }
+        Page<User> userList=userRepository.findByRoleAndKeyword(role,keyword,pageable);
+        List<UserDTO> userDTOList=new ArrayList<>();
+        for(User u:userList){
+            userDTOList.add(new UserDTO(u));
+        }
+        return userDTOList;
     }
 }

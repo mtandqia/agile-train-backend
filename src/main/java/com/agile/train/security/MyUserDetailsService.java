@@ -36,9 +36,8 @@ public class MyUserDetailsService implements UserDetailsService {
         user.orElseThrow(EmailNotFoundException::new);
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-        for (String authority : user.get().getAuthorities()) {
-            authorities.add(new SimpleGrantedAuthority(authority));
-        }
+        authorities.add(new SimpleGrantedAuthority(user.get().getAuthorities()));
+
 
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 

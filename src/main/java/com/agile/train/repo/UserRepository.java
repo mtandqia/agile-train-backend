@@ -28,6 +28,8 @@ public interface UserRepository extends MongoRepository<User, String> {
     Optional<User> findOneByLogin(String login);
 
     //@Query(value="{$and:[{$or: [{\"email\": /?1/}, {\"login\": /?1/}]},{\"authorities._id\":/?0/}]})",sort= "{last_modified_time:-1}")
-    @Query(value="{$and:[{\"login\": /?1/},{\"authorities._id\":/?0/}]}",sort= "{last_modified_time:-1}")
+    @Query(value="{$and:[{\"login\": /?1/},{\"authorities\":/?0/}]}",sort= "{last_modified_time:-1}")
     Page<User> findByRoleAndKeyword(String role, String keyword, Pageable pageable);
+
+    Page<User> findByAuthoritiesAndLoginOrderByLastModifiedDateDesc(String role, String keyword, Pageable pageable);
 }
