@@ -131,8 +131,13 @@ public class ForumService {
         );
     }
 
-    public List<QuestionDTO> getQuestionByKeyword(String keyword, Pageable pageable) {
-        Page<Question> questionPage=questionRepository.findByQuestionTitleLikeOrQuestionContentLike(keyword,keyword,pageable);
+    public List<QuestionDTO> getQuestionByKeyword(String keyword,String order, Pageable pageable) {
+        Page<Question> questionPage;
+        if("desc".equals(order)){
+            questionPage=questionRepository.findByQuestionTitleLikeOrQuestionContentLikeOrderByModifyTimeDesc(keyword,keyword,pageable);
+        }else{
+            questionPage=questionRepository.findByQuestionTitleLikeOrQuestionContentLikeOrderByModifyTimeAsc(keyword, keyword, pageable);
+        }
         List<QuestionDTO> questionDTOList=new ArrayList<>();
         for(Question q:questionPage){
             questionDTOList.add(new QuestionDTO(q,forumRepository.countByQuestionId(q.getId())));

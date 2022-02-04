@@ -13,5 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface QuestionRepository extends MongoRepository<Question, String> {
 
-    Page<Question> findByQuestionTitleLikeOrQuestionContentLike(String keyword, String keyword1, Pageable pageable);
+    Page<Question> findByQuestionTitleLikeOrQuestionContentLikeOrderByModifyTimeDesc(String keyword, String keyword1, Pageable pageable);
+
+    Page<Question> findByQuestionTitleLikeOrQuestionContentLikeOrderByModifyTimeAsc(String keyword, String keyword1, Pageable pageable);
 }

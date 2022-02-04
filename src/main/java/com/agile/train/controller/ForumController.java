@@ -42,12 +42,14 @@ public class ForumController {
     @ApiImplicitParams({
             @ApiImplicitParam(value="页码（从0开始）",name = "page",defaultValue = "0"),
             @ApiImplicitParam(value="页的大小",name = "size",defaultValue = "10"),
-            @ApiImplicitParam(value="搜索关键词",name = "keyword")
+            @ApiImplicitParam(value="搜索关键词",name = "keyword"),
+            @ApiImplicitParam(value="顺序",name = "order",defaultValue = "desc")
     })
     public ResultVM<List<QuestionDTO>> getQuestion(@RequestParam(defaultValue = "",required = false) String keyword,
-                                                   @PageableDefault(sort = {"modifyTime"}, direction = Sort.Direction.DESC) Pageable pageable){
+                                                   @RequestParam(defaultValue = "desc",required = false) String order,
+                                                   Pageable pageable){
         return new ResultVM<List<QuestionDTO>>().success().data(
-                forumService.getQuestionByKeyword(keyword,pageable));
+                forumService.getQuestionByKeyword(keyword,order,pageable));
     }
 
     @PostMapping("/comment")
