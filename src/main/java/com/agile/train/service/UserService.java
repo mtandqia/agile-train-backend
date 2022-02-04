@@ -1,7 +1,9 @@
 package com.agile.train.service;
 
 import com.agile.train.constant.AuthoritiesConstants;
+import com.agile.train.dto.ResultVM;
 import com.agile.train.dto.UserDTO;
+import com.agile.train.dto.UserModifyDTO;
 import com.agile.train.entity.User;
 import com.agile.train.exception.EmailAlreadyUsedException;
 import com.agile.train.exception.LoginAlreadyUsedException;
@@ -78,5 +80,51 @@ public class UserService {
             userDTOList.add(new UserDTO(u));
         }
         return userDTOList;
+    }
+
+    public ResultVM<String> updateUser(UserModifyDTO dto) {
+        if(dto==null||dto.getId()==null){
+            throw new NullParameterException();
+        }
+        boolean updated= false;
+        Optional<User> opt=userRepository.findById(dto.getId());
+        if(opt.isPresent()){
+            User user=opt.get();
+            if(dto.getLogin()!=null&&!dto.getLogin().equals(user.getLogin())){
+                userRepository.findOneByLogin(dto.getLogin().toLowerCase()).ifPresent(existingUser -> {
+                    throw new LoginAlreadyUsedException();
+                });
+                user.setLogin(dto.getLogin());
+            }
+            if(dto.getEmail()!=null&&!dto.getEmail().equals(user.getEmail())){
+                userRepository.findOneByEmailIgnoreCase(dto.getEmail()).ifPresent(existingUser -> {
+                    throw new EmailAlreadyUsedException();
+                });
+                user.setEmail(dto.getEmail().toLowerCase());
+            }
+            if(dto.getPassword()!=null){user.setPassword(passwordEncoder.encode(dto.getPassword()));}
+            userRepository.save(user);
+            log.debug("Changed Information for User: {}", user);
+            updated=true;
+        }
+        if(updated){
+            return new ResultVM<String>().success().data("Changed information for user: "+dto.getId());
+        }else{
+            return new ResultVM<String>().fail().data("Fail to change information for user: "+dto.getId());
+        }
+    }
+
+    public ResultVM<String> deleteUser(String login) {
+        if(login==null){
+            throw new NullParameterException();
+        }
+        Optional<User> optional=userRepository.findOneByLogin(login);
+        if(optional.isPresent()) {
+            User user=optional.get();
+            userRepository.delete(user);
+            log.debug("Deleted User: {}", user);
+            return new ResultVM<String>().success().data("Deleted User: "+login);
+        }
+        return new ResultVM<String>().fail().data("Delete failed, there is no user named "+login);
     }
 }

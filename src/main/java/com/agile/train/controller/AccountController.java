@@ -3,7 +3,9 @@ package com.agile.train.controller;
 import com.agile.train.dto.ManagedUserVM;
 import com.agile.train.dto.ResultVM;
 import com.agile.train.dto.UserDTO;
+import com.agile.train.dto.UserModifyDTO;
 import com.agile.train.entity.User;
+import com.agile.train.exception.EmailAlreadyUsedException;
 import com.agile.train.exception.InternalServerErrorException;
 import com.agile.train.exception.InvalidPasswordException;
 import com.agile.train.repo.UserRepository;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Mengting Lu
@@ -33,6 +36,9 @@ import java.util.List;
 public class AccountController {
     @Autowired
     UserService userService;
+
+    @Autowired
+    UserRepository userRepository;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
@@ -73,6 +79,33 @@ public class AccountController {
                                                     @RequestParam(defaultValue = "",required = false) String keyword,
                                                     @PageableDefault(sort = {"last_modified_time"}, direction = Sort.Direction.DESC) Pageable pageable) {
         return new ResultVM<List<UserDTO>>().success().data(userService.getAccountListByRole(role,keyword,pageable));
+    }
+
+    @DeleteMapping("/account")
+    @ApiOperation(value = "删除账户",notes = "只有ADMIN有权限调用此接口删除用户")
+    @ApiImplicitParam(value="用户名",name = "login")
+    public ResultVM<String> deleteAccount(@RequestParam String login){
+        return userService.deleteUser(login);
+    }
+
+    /**
+     * PUT  /account : update the current user information.
+     *
+     * @param dto the current user information
+     * @throws EmailAlreadyUsedException 400 (Bad Request) if the email is already used
+     * @throws RuntimeException 500 (Internal Server Error) if the user login wasn't found
+     */
+    @PutMapping("/account")
+    @ApiOperation(value = "更新用户账户信息",notes = "只有ADMIN有权限调用此接口更新用户信息")
+    public ResultVM<String> updateAccount(@Valid @RequestBody UserModifyDTO dto) {
+        Optional<User> user = userRepository.findById(dto.getId());
+        if (!user.isPresent()) {
+            throw new InternalServerErrorException("User could not be found");
+        }
+        if (dto.getPassword()!=null&&!checkPasswordLength(dto.getPassword())) {
+            throw new InvalidPasswordException();
+        }
+        return userService.updateUser(dto);
     }
 
     private static boolean checkPasswordLength(String password) {
