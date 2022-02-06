@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -117,5 +118,10 @@ public class CoursewareService {
         long userDownloadCnt=userDownloadRepository.countByUserId(opt.get().getId());
         return new ResultVM<Double>().success().data(
                 (double)Math.round((double)userDownloadCnt/coursewareCnt*1000)/1000);
+    }
+
+    public ResultVM<List<Courseware>> getAllCoursewares(){
+        List<Courseware> coursewares = coursewareRepository.findAll();
+        return new ResultVM<List<Courseware>>().success().data(coursewares);
     }
 }

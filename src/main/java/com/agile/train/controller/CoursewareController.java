@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Mengting Lu
@@ -42,5 +43,11 @@ public class CoursewareController {
     @ApiOperation(value="获得学生自己的学习进度",notes = "STUDENT有权调用")
     public ResultVM<Double> getUserDownloads(){
         return coursewareService.getUserDownloads();
+    }
+
+    @GetMapping(value = "/list_all")
+    @ApiOperation(value="获得所有课件列表",notes = "TEACHER和STUDENT有权调用")
+    public ResultVM<List<Courseware>> getAllCoursewares(){
+        return coursewareService.getAllCoursewares();
     }
 }
