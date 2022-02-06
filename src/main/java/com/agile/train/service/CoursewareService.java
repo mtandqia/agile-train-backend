@@ -97,7 +97,7 @@ public class CoursewareService {
 
         //更新下载量 TODO: move
         Optional<User> opt=userService.getUserWithAuthorities();
-        String userId=opt.orElseThrow().getId();
+        String userId=opt.get().getId();
         UserDownload origin=userDownloadRepository.findOneByCoursewareIdAndUserId(id,userId);
         if(origin==null) {
             UserDownload userDownload=new UserDownload(null,userId,id, 1,LocalDateTime.now().toString());
@@ -114,7 +114,7 @@ public class CoursewareService {
     public ResultVM<Double> getUserDownloads() {
         long coursewareCnt=coursewareRepository.count();
         Optional<User> opt=userService.getUserWithAuthorities();
-        long userDownloadCnt=userDownloadRepository.countByUserId(opt.orElseThrow().getId());
+        long userDownloadCnt=userDownloadRepository.countByUserId(opt.get().getId());
         return new ResultVM<Double>().success().data(
                 (double)Math.round((double)userDownloadCnt/coursewareCnt*1000)/1000);
     }
