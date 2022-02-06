@@ -80,7 +80,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                         valid = authorities.contains(AuthoritiesConstants.TEACHER);
                     }
                     //student
-
+                    if(Pattern.matches(".*user_downloads.*",url)){
+                        valid=authorities.contains(AuthoritiesConstants.STUDENT);
+                    }
                     //admin
                     else if (Pattern.matches(".*admin.*", url)) {
                         valid = authorities.contains(AuthoritiesConstants.ADMIN);

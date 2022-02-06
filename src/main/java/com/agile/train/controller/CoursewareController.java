@@ -25,7 +25,6 @@ public class CoursewareController {
     CoursewareService coursewareService;
 
     @PostMapping(value = "")
-    //TODO: permission
     @ApiOperation(value = "上传课件", notes = "只有TEACHER有权限调用此接口上传新课件")
     @ApiImplicitParam(name = "courseware", value = "文件")
     public ResultVM<Courseware> uploadFile(MultipartFile file) {
@@ -33,10 +32,15 @@ public class CoursewareController {
     }
 
     @GetMapping(value="")
-    //TODO: permission
     @ApiOperation(value = "下载课件",notes = "TEACHER和STUDENT有权限调用此接口")
     @ApiImplicitParam(name="coursewareId", value="课件id")
     public ResponseEntity<byte[]> downloadFile(@RequestParam String coursewareId) throws IOException {
         return coursewareService.downloadFile(coursewareId);
+    }
+
+    @GetMapping(value = "/user_downloads")
+    @ApiOperation(value="获得学生自己的学习进度",notes = "STUDENT有权调用")
+    public ResultVM<Double> getUserDownloads(){
+        return coursewareService.getUserDownloads();
     }
 }
