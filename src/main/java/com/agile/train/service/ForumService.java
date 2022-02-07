@@ -1,9 +1,6 @@
 package com.agile.train.service;
 
-import com.agile.train.dto.CommentAddDTO;
-import com.agile.train.dto.QuestionAddDTO;
-import com.agile.train.dto.QuestionAndCommentDTO;
-import com.agile.train.dto.QuestionDTO;
+import com.agile.train.dto.*;
 import com.agile.train.entity.CommentAndUser;
 import com.agile.train.entity.Question;
 import com.agile.train.entity.User;
@@ -143,5 +140,14 @@ public class ForumService {
             questionDTOList.add(new QuestionDTO(q,forumRepository.countByQuestionId(q.getId())));
         }
         return questionDTOList;
+    }
+
+    public ParticipationDTO getParticipation() {
+        Optional<User> opt=userService.getUserWithAuthorities();
+        String loginName=opt.get().getLogin();
+        Set<String> questionIdList=new HashSet<>(forumRepository.findQuestionIdList(loginName));
+        int involvedQuestionNum=questionIdList.size();
+        int repliedNum=forumRepository.countByReplyUserLoginName(loginName);
+        return new ParticipationDTO(involvedQuestionNum,repliedNum);
     }
 }

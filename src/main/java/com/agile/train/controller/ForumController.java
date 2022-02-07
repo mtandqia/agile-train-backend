@@ -63,4 +63,10 @@ public class ForumController {
     public ResultVM<QuestionAndCommentDTO> getReply(@RequestParam String questionId){
         return new ResultVM<QuestionAndCommentDTO>().success().data(forumService.getAllComment(questionId));
     }
+
+    @GetMapping("/participation")
+    @ApiOperation(value = "查看参与讨论问题数量、被回复数",notes = "TEACHER和STUDENT有权调用此接口")
+    public ResultVM<ParticipationDTO> getParticipation(){
+        return new ResultVM<ParticipationDTO>().success().data(forumService.getParticipation());
+    }
 }
