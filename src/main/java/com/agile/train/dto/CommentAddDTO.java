@@ -24,7 +24,7 @@ public class CommentAddDTO {
     @ApiModelProperty(value="问题id")
     private String questionId;
 
-    @ApiModelProperty("被回复人 ")
+    @ApiModelProperty("被回复人")
     private String replyUserLoginName;
 
 }

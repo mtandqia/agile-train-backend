@@ -3,10 +3,12 @@ package com.agile.train.service;
 import com.agile.train.dto.*;
 import com.agile.train.entity.CommentAndUser;
 import com.agile.train.entity.Question;
+import com.agile.train.entity.Readed;
 import com.agile.train.entity.User;
 import com.agile.train.exception.NullParameterException;
 import com.agile.train.repo.ForumRepository;
 import com.agile.train.repo.QuestionRepository;
+import com.agile.train.repo.ReadedRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +31,9 @@ public class ForumService {
     UserService userService;
     @Autowired
     QuestionRepository questionRepository;
+
+    @Autowired
+    ReadedRepository readedRepository;
 
     public Question addQuestion(QuestionAddDTO questionAddDTO) {
         if(questionAddDTO==null){
@@ -71,8 +76,23 @@ public class ForumService {
             }
             if(commentDTO.getParentId()!=null) {
                 Optional<CommentAndUser> opt = forumRepository.findById(commentDTO.getParentId());
+
                 opt.orElseThrow(() -> new NullPointerException("there is no such parentId."));
             }
+            Readed replied=new Readed(
+                    null,
+                    commentDTO.getReplyUserLoginName(),
+                    commentDTO.getQuestionId(),
+                    false,
+                    LocalDateTime.now().toString());
+            readedRepository.save(replied);
+            Readed poster=new Readed(
+                    null,
+                    questionRepository.findById(commentDTO.getQuestionId()).get().getLoginName(),
+                    commentDTO.getQuestionId(),
+                    false,
+                    LocalDateTime.now().toString());
+            readedRepository.save(poster);
 
             return forumRepository.save(new CommentAndUser(
                     null,
