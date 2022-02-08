@@ -124,4 +124,8 @@ public class CoursewareService {
         List<Courseware> coursewares = coursewareRepository.findAll();
         return new ResultVM<List<Courseware>>().success().data(coursewares);
     }
+
+    public void deleteFile(String id) throws IOException {
+        coursewareRepository.deleteById(id);
+    }
 }

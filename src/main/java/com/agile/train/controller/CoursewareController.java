@@ -39,6 +39,13 @@ public class CoursewareController {
         return coursewareService.downloadFile(coursewareId);
     }
 
+    @DeleteMapping(value = "")
+    @ApiOperation(value = "删除课件", notes = "只有TEACHER有权限调用此接口删除课件")
+    @ApiImplicitParam(name = "coursewareId", value = "课件id")
+    public void deleteFile(@RequestParam String coursewareId) throws IOException {
+        coursewareService.deleteFile(coursewareId);
+    }
+
     @GetMapping(value = "/user_downloads")
     @ApiOperation(value="获得学生自己的学习进度",notes = "STUDENT有权调用")
     public ResultVM<Double> getUserDownloads(){
