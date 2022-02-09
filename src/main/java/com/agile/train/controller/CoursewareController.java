@@ -27,7 +27,7 @@ public class CoursewareController {
 
     @PostMapping(value = "")
     @ApiOperation(value = "上传课件", notes = "只有TEACHER有权限调用此接口上传新课件")
-    @ApiImplicitParam(name = "courseware", value = "文件")
+    @ApiImplicitParam(name = "file", value = "文件")
     public ResultVM<Courseware> uploadFile(MultipartFile file) {
         return coursewareService.uploadFile(file);
     }

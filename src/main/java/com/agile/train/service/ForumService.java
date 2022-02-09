@@ -110,6 +110,7 @@ public class ForumService {
     }
 
     public QuestionAndCommentDTO getAllComment(String questionId){
+        setReadedMsg(questionId);
         if(questionId==null){
             throw new NullParameterException();
         }
@@ -146,6 +147,20 @@ public class ForumService {
                 questionContent,
                 commentAndUserArrayList
         );
+    }
+
+    private void setReadedMsg(String questionId) {
+        Optional<User> optional=userService.getUserWithAuthorities();
+        if(optional.isPresent()){
+            User user=optional.get();
+            List<Readed> readed=readedRepository.findByUserLoginNameAndQuestionId(user.getLogin(),questionId);
+            for(Readed r:readed) {
+                if (!r.isReader()) {
+                    r.setReader(true);
+                    readedRepository.save(r);
+                }
+            }
+        }
     }
 
     public List<QuestionDTO> getQuestionByKeyword(String keyword,String order, Pageable pageable) {

@@ -4,10 +4,13 @@ import com.agile.train.entity.Readed;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author Mengting Lu
  * @date 2022/2/8 16:26
  */
 @Repository
 public interface ReadedRepository extends MongoRepository<Readed,String> {
+    List<Readed> findByUserLoginNameAndQuestionId(String login, String questionId);
 }
