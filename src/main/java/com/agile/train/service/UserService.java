@@ -38,6 +38,10 @@ public class UserService {
         return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneByLogin);
     }
 
+    public List<User> getAllStudents() {
+        return userRepository.findAllByAuthorities(AuthoritiesConstants.STUDENT);
+    }
+
     public User registerUser(UserDTO userDTO, String password, String role) {
         if(userDTO==null){
             throw new NullParameterException();

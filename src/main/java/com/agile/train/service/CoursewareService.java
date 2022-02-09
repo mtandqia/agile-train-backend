@@ -120,6 +120,18 @@ public class CoursewareService {
                 (double)Math.round((double)userDownloadCnt/coursewareCnt*1000)/1000);
     }
 
+    public ResultVM<Double> getAllDownloads(){
+        long coursewareCnt=coursewareRepository.count();
+        List<User> students = userService.getAllStudents();
+        long downloadCnt = 0;
+        for(int i = 0; i < students.size(); i++){
+            User st = students.get(i);
+            long userDownloadCnt = userDownloadRepository.countByUserId(st.getId());
+            downloadCnt += userDownloadCnt;
+        }
+        return new ResultVM<Double>().success().data((double)Math.round((double)downloadCnt / coursewareCnt / students.size() * 1000) / 1000);
+    }
+
     public ResultVM<List<Courseware>> getAllCoursewares(){
         List<Courseware> coursewares = coursewareRepository.findAll();
         return new ResultVM<List<Courseware>>().success().data(coursewares);

@@ -110,4 +110,21 @@
 			</plugin>
         </plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>sonar</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<sonar.jdbc.url>jdbc://localhost:3306/sonar</sonar.jdbc.url>
+				<sonar.jdbc.driver>com.mysql.jdbc.Driver</sonar.jdbc.driver>
+				<sonar.jdbc.username>root</sonar.jdbc.username>
+				<sonar.jdbc.password></sonar.jdbc.password>
+				<!-- Sonar服务器访问地址 -->
+				<sonar.host.url>http://localhost:9000</sonar.host.url>
+			</properties>
+		</profile>
+	</profiles>
 </project>

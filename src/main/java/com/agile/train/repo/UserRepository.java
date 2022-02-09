@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -30,5 +31,7 @@ public interface UserRepository extends MongoRepository<User, String> {
     //@Query(value="{$and:[{$or: [{'email': /?1/}, {'login': /?1/}]},{'authorities._id':/?0/}]})",sort= "{last_modified_time:-1}")
     @Query(value="{$and:[{'login': /?1/},{'authorities':/?0/}]}",sort= "{last_modified_time:-1}")
     Page<User> findByRoleAndKeyword(String role, String keyword, Pageable pageable);
+
+    List<User> findAllByAuthorities(String role);
 
 }

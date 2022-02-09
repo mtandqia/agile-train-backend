@@ -52,6 +52,12 @@ public class CoursewareController {
         return coursewareService.getUserDownloads();
     }
 
+    @GetMapping(value = "/all_downloads")
+    @ApiOperation(value = "获得总体学习进度", notes = "TEACHER有权调用")
+    public ResultVM<Double> getAllDownloads(){
+        return coursewareService.getAllDownloads();
+    }
+
     @GetMapping(value = "/list_all")
     @ApiOperation(value="获得所有课件列表",notes = "TEACHER和STUDENT有权调用")
     public ResultVM<List<Courseware>> getAllCoursewares(){
