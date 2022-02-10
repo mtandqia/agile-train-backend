@@ -99,22 +99,6 @@ public class CoursewareService {
         httpHeaders.setContentDispositionFormData("attachment", fileName);
         //指定以流的形式下载文件
         httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-
-        //更新下载量 to be move
-        Optional<User> opt=userService.getUserWithAuthorities();
-        if(opt.isPresent()) {
-            String userId = opt.get().getId();
-            UserDownload origin = userDownloadRepository.findOneByCoursewareIdAndUserId(id, userId);
-            if (origin == null) {
-                UserDownload userDownload = new UserDownload(null, userId, id, 1, LocalDateTime.now().toString());
-                userDownloadRepository.save(userDownload);
-            } else {
-                origin.setDownloads(origin.getDownloads() + 1);
-                origin.setModifyTime(LocalDateTime.now().toString());
-                userDownloadRepository.save(origin);
-            }
-        }
-
         return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.CREATED);
     }
 
@@ -148,5 +132,26 @@ public class CoursewareService {
 
     public void deleteFile(String id) {
         coursewareRepository.deleteById(id);
+    }
+
+    public String addDownloadFileCnt(String id) {
+        Optional<User> opt=userService.getUserWithAuthorities();
+        if(opt.isPresent()) {
+            int cnt=0;
+            String userId = opt.get().getId();
+            UserDownload origin = userDownloadRepository.findOneByCoursewareIdAndUserId(id, userId);
+            if (origin == null) {
+                cnt=1;
+                UserDownload userDownload = new UserDownload(null, userId, id, 1, LocalDateTime.now().toString());
+                userDownloadRepository.save(userDownload);
+            } else {
+                origin.setDownloads(origin.getDownloads() + 1);
+                cnt=origin.getDownloads();
+                origin.setModifyTime(LocalDateTime.now().toString());
+                userDownloadRepository.save(origin);
+            }
+            return "Succeed adding download counts, now is "+cnt+".";
+        }
+        return "";
     }
 }

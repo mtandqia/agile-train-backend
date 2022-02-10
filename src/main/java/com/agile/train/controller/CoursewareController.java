@@ -35,8 +35,15 @@ public class CoursewareController {
     @GetMapping(value="")
     @ApiOperation(value = "下载课件",notes = "TEACHER和STUDENT有权限调用此接口")
     @ApiImplicitParam(name="coursewareId", value="课件id")
-    public ResponseEntity<byte[]> downloadFile(@RequestParam String coursewareId) throws IOException {
+    public ResponseEntity<byte[]> downloadFile(@RequestParam String coursewareId){
         return coursewareService.downloadFile(coursewareId);
+    }
+
+    @GetMapping(value="download_cnt")
+    @ApiOperation(value = "增加课件下载量(+1)",notes = "TEACHER和STUDENT有权限调用此接口")
+    @ApiImplicitParam(name="coursewareId", value="课件id")
+    public ResultVM<String> addDownloadFileCnt(@RequestParam String coursewareId){
+        return new ResultVM<String>().success().data(coursewareService.addDownloadFileCnt(coursewareId));
     }
 
     @DeleteMapping(value = "")
