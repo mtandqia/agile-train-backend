@@ -61,10 +61,10 @@ public class CoursewareService {
 
             return new ResultVM<Courseware>().success().data(courseware);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.info("context", e);
             return null;
         } catch (NullPointerException e){
-            e.printStackTrace();
+            log.info("context", e);
             throw new NullParameterException();
         }
     }
@@ -91,7 +91,7 @@ public class CoursewareService {
             }
             bytes=bos.toByteArray();
         }catch (IOException e){
-            e.printStackTrace();
+            log.info("context", e);
         }
         HttpHeaders httpHeaders = new HttpHeaders();
         fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);

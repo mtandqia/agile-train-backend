@@ -1,6 +1,7 @@
 package com.agile.train.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,7 @@ import java.util.Map;
  * @author Mengting Lu
  * @date 2022/2/1 13:32
  */
+@Slf4j
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -29,7 +31,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 setDetails(request, authRequest);
                 return this.getAuthenticationManager().authenticate(authRequest);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.info("context", e);
                 authRequest = new UsernamePasswordAuthenticationToken("", "");
                 setDetails(request, authRequest);
                 return this.getAuthenticationManager().authenticate(authRequest);
