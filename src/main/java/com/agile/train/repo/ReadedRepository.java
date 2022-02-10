@@ -12,5 +12,8 @@ import java.util.List;
  */
 @Repository
 public interface ReadedRepository extends MongoRepository<Readed,String> {
+
     List<Readed> findByUserLoginNameAndQuestionId(String login, String questionId);
+
+    List<Readed> findByUserLoginNameAndReader(String loginName, boolean b);
 }

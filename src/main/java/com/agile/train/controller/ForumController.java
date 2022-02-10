@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Mengting Lu
@@ -68,5 +69,11 @@ public class ForumController {
     @ApiOperation(value = "查看参与讨论问题数量、被回复数",notes = "TEACHER和STUDENT有权调用此接口")
     public ResultVM<ParticipationDTO> getParticipation(){
         return new ResultVM<ParticipationDTO>().success().data(forumService.getParticipation());
+    }
+
+    @GetMapping("/unreaded_msg_question_list")
+    @ApiOperation(value = "获得存在该用户未读消息的问题列表",notes="TEACHER和STUDENT有权调用此接口")
+    public ResultVM<Set<QuestionSimpleDTO>> getUnreadedMsgQuestionList(){
+        return new ResultVM<Set<QuestionSimpleDTO>>().success().data(forumService.getUnreadedMsgQuestionList());
     }
 }

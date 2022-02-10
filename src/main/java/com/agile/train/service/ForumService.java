@@ -192,4 +192,19 @@ public class ForumService {
         }
         return null;
     }
+
+    public Set<QuestionSimpleDTO> getUnreadedMsgQuestionList() {
+        Optional<User> opt=userService.getUserWithAuthorities();
+        Set<QuestionSimpleDTO> questionIdList=new HashSet<>();
+        if(opt.isPresent()) {
+            String loginName=opt.get().getLogin();
+            List<Readed> unreadedList=readedRepository.findByUserLoginNameAndReader(loginName,false);
+            for(Readed r:unreadedList){
+                Optional<Question> questionOptional=questionRepository.findById(r.getQuestionId());
+                questionOptional.ifPresent(question ->
+                        questionIdList.add(new QuestionSimpleDTO(r.getQuestionId(), question.getQuestionTitle())));
+            }
+        }
+        return questionIdList;
+    }
 }
