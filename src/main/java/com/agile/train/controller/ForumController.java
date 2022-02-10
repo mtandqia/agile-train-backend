@@ -73,7 +73,7 @@ public class ForumController {
 
     @GetMapping("/unreaded_msg_question_list")
     @ApiOperation(value = "获得存在该用户未读消息的问题列表",notes="TEACHER和STUDENT有权调用此接口")
-    public ResultVM<Set<QuestionSimpleDTO>> getUnreadedMsgQuestionList(){
-        return new ResultVM<Set<QuestionSimpleDTO>>().success().data(forumService.getUnreadedMsgQuestionList());
+    public ResultVM<UnreadedMsgDTO> getUnreadedMsgQuestionList(){
+        return new ResultVM<UnreadedMsgDTO>().success().data(forumService.getUnreadedMsgQuestionList());
     }
 }

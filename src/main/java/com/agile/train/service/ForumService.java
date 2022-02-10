@@ -193,9 +193,10 @@ public class ForumService {
         return null;
     }
 
-    public Set<QuestionSimpleDTO> getUnreadedMsgQuestionList() {
+    public UnreadedMsgDTO getUnreadedMsgQuestionList() {
         Optional<User> opt=userService.getUserWithAuthorities();
         Set<QuestionSimpleDTO> questionIdList=new HashSet<>();
+        int cnt=0;
         if(opt.isPresent()) {
             String loginName=opt.get().getLogin();
             List<Readed> unreadedList=readedRepository.findByUserLoginNameAndReader(loginName,false);
@@ -204,7 +205,8 @@ public class ForumService {
                 questionOptional.ifPresent(question ->
                         questionIdList.add(new QuestionSimpleDTO(r.getQuestionId(), question.getQuestionTitle())));
             }
+            cnt=questionIdList.size();
         }
-        return questionIdList;
+        return new UnreadedMsgDTO(cnt,questionIdList);
     }
 }
