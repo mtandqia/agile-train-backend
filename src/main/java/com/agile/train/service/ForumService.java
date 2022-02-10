@@ -76,8 +76,9 @@ public class ForumService {
             }
             if(commentDTO.getParentId()!=null) {
                 Optional<CommentAndUser> opt = forumRepository.findById(commentDTO.getParentId());
-
-                opt.orElseThrow(() -> new NullPointerException("there is no such parentId."));
+                if(!opt.isPresent()){
+                    throw new NullPointerException("there is no such parentId.");
+                }
             }
             Readed replied=new Readed(
                     null,
@@ -86,14 +87,17 @@ public class ForumService {
                     false,
                     LocalDateTime.now().toString());
             readedRepository.save(replied);
-            Readed poster=new Readed(
-                    null,
-                    questionRepository.findById(commentDTO.getQuestionId()).get().getLoginName(),
-                    commentDTO.getQuestionId(),
-                    false,
-                    LocalDateTime.now().toString());
-            readedRepository.save(poster);
 
+            Optional<Question> question1=questionRepository.findById(commentDTO.getQuestionId());
+            if(question1.isPresent()){
+                Readed poster=new Readed(
+                        null,
+                        question1.get().getLoginName(),
+                        commentDTO.getQuestionId(),
+                        false,
+                        LocalDateTime.now().toString());
+                readedRepository.save(poster);
+            }
             return forumRepository.save(new CommentAndUser(
                     null,
                     commentDTO.getParentId(),
@@ -179,10 +183,13 @@ public class ForumService {
 
     public ParticipationDTO getParticipation() {
         Optional<User> opt=userService.getUserWithAuthorities();
-        String loginName=opt.get().getLogin();
-        Set<String> questionIdList=new HashSet<>(forumRepository.findQuestionIdList(loginName));
-        int involvedQuestionNum=questionIdList.size();
-        int repliedNum=forumRepository.countByReplyUserLoginName(loginName);
-        return new ParticipationDTO(involvedQuestionNum,repliedNum);
+        if(opt.isPresent()) {
+            String loginName = opt.get().getLogin();
+            Set<String> questionIdList = new HashSet<>(forumRepository.findQuestionIdList(loginName));
+            int involvedQuestionNum = questionIdList.size();
+            int repliedNum = forumRepository.countByReplyUserLoginName(loginName);
+            return new ParticipationDTO(involvedQuestionNum, repliedNum);
+        }
+        return null;
     }
 }

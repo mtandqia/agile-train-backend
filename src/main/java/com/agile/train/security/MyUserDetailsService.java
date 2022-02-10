@@ -33,14 +33,13 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<com.agile.train.entity.User> user = userRepository.findOneByLogin(username);
-        user.orElseThrow(EmailNotFoundException::new);
-
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.get().getAuthorities()));
-
-
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-
-        return new User(user.get().getLogin(), user.get().getPassword(), authorities);
+        if(user.isPresent()) {
+            List<GrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority(user.get().getAuthorities()));
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            return new User(user.get().getLogin(), user.get().getPassword(), authorities);
+        }else{
+            throw new EmailNotFoundException();
+        }
     }
 }

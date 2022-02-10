@@ -28,10 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UsernamePasswordAuthenticationProvider usernamePasswordAuthenticationProvider;
-    @Autowired
-    private LoginAuthenticationSuccessHandler loginAuthenticationSuccessHandler;
-    @Autowired
-    private LoginAuthenticationFailureHandler loginAuthenticationFailureHandler;
 
     @Bean
     @Override
@@ -100,6 +96,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CustomAuthenticationFilter filter = new CustomAuthenticationFilter();
 
         filter.setFilterProcessesUrl("/auth/login");
+
+        LoginAuthenticationSuccessHandler loginAuthenticationSuccessHandler = new LoginAuthenticationSuccessHandler();
+        LoginAuthenticationFailureHandler loginAuthenticationFailureHandler =new LoginAuthenticationFailureHandler();
 
         filter.setAuthenticationSuccessHandler(loginAuthenticationSuccessHandler);
         filter.setAuthenticationFailureHandler(loginAuthenticationFailureHandler);

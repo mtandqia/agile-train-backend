@@ -6,17 +6,18 @@ import com.agile.train.util.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.regex.Pattern;
 
 /**
@@ -57,48 +58,20 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 //从已有的user缓存中取了出user信息
                 UserDetails user=null;
                 boolean hasToken=true;
-                boolean valid = false;
+                Collection<? extends GrantedAuthority> authorities=null;
                 try {
                     user = userDetailsService.loadUserByUsername(username);
+                    authorities = user.getAuthorities();
                 }catch (EmailNotFoundException e){
                     hasToken=false;
                     logger.error(e.getMessage());
                 }
-
-                if(hasToken) {
-                    valid=true;
-                    String authorities = String.valueOf(user.getAuthorities());
-
-                    //teacher & student
-                    if (Pattern.matches(".*forum.*|.*courseware/.*", url)) {
-                        valid = authorities.contains(AuthoritiesConstants.STUDENT) ||
-                                authorities.contains(AuthoritiesConstants.TEACHER);
-                    }
-                    //teacher, only teachers can upload and delete files
-                    if (Pattern.matches(".*courseware.*", url)&&
-                            ("POST".equals(method)||"DELETE".equals(method))) {
-                        valid = authorities.contains(AuthoritiesConstants.TEACHER);
-                    }
-                    //student
-                    if(Pattern.matches(".*user_downloads.*",url)){
-                        valid=authorities.contains(AuthoritiesConstants.STUDENT);
-                    }
-                    //admin
-                    else if (Pattern.matches(".*admin.*", url)) {
-                        valid = authorities.contains(AuthoritiesConstants.ADMIN);
-                    }
-
-                    //查看自身账户信息跳过权限验证
-                    if (url.contains("account_own")) {
-                        valid = true;
-                    }
-
-                    logger.info("valid:" + valid);
-                }
+                boolean valid = checkValid(hasToken,String.valueOf(authorities),url,method);
                 //检查token是否有效
-                if (!TokenUtils.isTokenExpired(authToken)&&valid) {
+                boolean isValidToken=!TokenUtils.isTokenExpired(authToken)&&valid;
+                if (isValidToken) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user
-                            , null, user.getAuthorities());
+                            , null, authorities);
 
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
@@ -108,6 +81,40 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             }
         }
         chain.doFilter(request, response);
+    }
+
+    private boolean checkValid(boolean hasToken,String authorities,String url,String method) {
+        boolean valid=false;
+        if(hasToken) {
+            valid=true;
+
+            //teacher & student
+            if (Pattern.matches(".*forum.*|.*courseware/.*", url)) {
+                valid = authorities.contains(AuthoritiesConstants.STUDENT) ||
+                        authorities.contains(AuthoritiesConstants.TEACHER);
+            }
+            //teacher, only teachers can upload and delete files
+            if (Pattern.matches(".*courseware.*", url)&&
+                    ("POST".equals(method)||"DELETE".equals(method))) {
+                valid = authorities.contains(AuthoritiesConstants.TEACHER);
+            }
+            //student
+            if(Pattern.matches(".*user_downloads.*",url)){
+                valid=authorities.contains(AuthoritiesConstants.STUDENT);
+            }
+            //admin
+            else if (Pattern.matches(".*admin.*", url)) {
+                valid = authorities.contains(AuthoritiesConstants.ADMIN);
+            }
+
+            //查看自身账户信息跳过权限验证
+            if (url.contains("account_own")) {
+                valid = true;
+            }
+
+            logger.info("valid:" + valid);
+        }
+        return valid;
     }
 
 }

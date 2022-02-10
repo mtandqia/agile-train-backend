@@ -26,11 +26,11 @@ public class LoginAuthenticationFailureHandler implements AuthenticationFailureH
         PrintWriter printWriter = response.getWriter();
         JSONObject jsonObject = new JSONObject();
 
-        if(e instanceof UsernameNotFoundException)
+        if(e instanceof UsernameNotFoundException) {
             jsonObject.put("message", "Email address not registered");
-        else
+        }else {
             jsonObject.put("message", "Incorrect password or inappropriate role");
-
+        }
         printWriter.write(jsonObject.toJSONString());
         printWriter.flush();
         printWriter.close();

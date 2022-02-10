@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class TokenUtils {
     //设置过期时间
-    private static final long EXPIRE_DATE = 7 * 24 * 60 * 60 * 1000;
+    private static final long EXPIRE_DATE = (long) 7 * 24 * 60 * 60 * 1000;
 
     private static final SecretKey key =
             new SecretKeySpec(
@@ -21,7 +21,8 @@ public class TokenUtils {
 
     public static String token(String username) {
         return Jwts.builder().setExpiration(new Date(System.currentTimeMillis() + EXPIRE_DATE)).setAudience(username)
-                .signWith(SignatureAlgorithm.HS256, key)
+//                .signWith(SignatureAlgorithm.HS256, key)
+                .signWith(key,SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -35,4 +36,6 @@ public class TokenUtils {
         final Date expiration = claimsJws.getBody().getExpiration();
         return expiration.before(new Date());
     }
+
+    private TokenUtils(){}
 }

@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +32,8 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
     public Optional<User> getUserWithAuthorities() {
         return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneByLogin);
@@ -53,7 +54,8 @@ public class UserService {
             throw new EmailAlreadyUsedException();
         });
         User newUser = new User();
-        String encryptedPassword = passwordEncoder.encode(password);
+        BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
+        String encryptedPassword = bCryptPasswordEncoder.encode(password);
         newUser.setLogin(userDTO.getLogin().toLowerCase());
         // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
@@ -106,7 +108,8 @@ public class UserService {
                 });
                 user.setEmail(dto.getEmail().toLowerCase());
             }
-            if(dto.getPassword()!=null){user.setPassword(passwordEncoder.encode(dto.getPassword()));}
+            BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
+            if(dto.getPassword()!=null){user.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));}
             userRepository.save(user);
             log.debug("Changed Information for User: {}", user);
             updated=true;

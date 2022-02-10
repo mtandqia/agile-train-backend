@@ -69,7 +69,7 @@ public class CoursewareService {
         }
     }
 
-    public ResponseEntity<byte[]> downloadFile(String id) throws IOException {
+    public ResponseEntity<byte[]> downloadFile(String id) {
         if(id==null){
             throw new NullParameterException();
         }
@@ -79,16 +79,20 @@ public class CoursewareService {
         }
         String fileName=optional.get().getCoursewareName();
         File file=new File(PathConstants.PATH+fileName);
-        FileInputStream fis = new FileInputStream(file);
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        byte[] b = new byte[1024];
-        int n;
-        while ((n = fis.read(b)) != -1)
-        {
-            bos.write(b, 0, n);
+        byte[] bytes=null;
+        try(
+            FileInputStream fis = new FileInputStream(file);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream()
+        ) {
+            byte[] b = new byte[1024];
+            int n;
+            while ((n = fis.read(b)) != -1) {
+                bos.write(b, 0, n);
+            }
+            bytes=bos.toByteArray();
+        }catch (IOException e){
+            e.printStackTrace();
         }
-        fis.close();
-        bos.close();
         HttpHeaders httpHeaders = new HttpHeaders();
         fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
         log.info(fileName);
@@ -96,28 +100,33 @@ public class CoursewareService {
         //指定以流的形式下载文件
         httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 
-        //更新下载量 TODO: move
+        //更新下载量 to be move
         Optional<User> opt=userService.getUserWithAuthorities();
-        String userId=opt.get().getId();
-        UserDownload origin=userDownloadRepository.findOneByCoursewareIdAndUserId(id,userId);
-        if(origin==null) {
-            UserDownload userDownload=new UserDownload(null,userId,id, 1,LocalDateTime.now().toString());
-            userDownloadRepository.save(userDownload);
-        }else{
-            origin.setDownloads(origin.getDownloads()+1);
-            origin.setModifyTime(LocalDateTime.now().toString());
-            userDownloadRepository.save(origin);
+        if(opt.isPresent()) {
+            String userId = opt.get().getId();
+            UserDownload origin = userDownloadRepository.findOneByCoursewareIdAndUserId(id, userId);
+            if (origin == null) {
+                UserDownload userDownload = new UserDownload(null, userId, id, 1, LocalDateTime.now().toString());
+                userDownloadRepository.save(userDownload);
+            } else {
+                origin.setDownloads(origin.getDownloads() + 1);
+                origin.setModifyTime(LocalDateTime.now().toString());
+                userDownloadRepository.save(origin);
+            }
         }
 
-        return new ResponseEntity<>(bos.toByteArray(), httpHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.CREATED);
     }
 
     public ResultVM<Double> getUserDownloads() {
         long coursewareCnt=coursewareRepository.count();
         Optional<User> opt=userService.getUserWithAuthorities();
-        long userDownloadCnt=userDownloadRepository.countByUserId(opt.get().getId());
-        return new ResultVM<Double>().success().data(
-                (double)Math.round((double)userDownloadCnt/coursewareCnt*1000)/1000);
+        if(opt.isPresent()) {
+            long userDownloadCnt = userDownloadRepository.countByUserId(opt.get().getId());
+            return new ResultVM<Double>().success().data(
+                    (double) Math.round((double) userDownloadCnt / coursewareCnt * 1000) / 1000);
+        }
+        return null;
     }
 
     public ResultVM<Double> getAllDownloads(){
@@ -137,7 +146,7 @@ public class CoursewareService {
         return new ResultVM<List<Courseware>>().success().data(coursewares);
     }
 
-    public void deleteFile(String id) throws IOException {
+    public void deleteFile(String id) {
         coursewareRepository.deleteById(id);
     }
 }
