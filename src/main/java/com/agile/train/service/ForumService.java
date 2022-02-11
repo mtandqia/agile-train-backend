@@ -209,4 +209,12 @@ public class ForumService {
         }
         return new UnreadedMsgDTO(cnt,questionIdList);
     }
+
+    public List<Question> getQuestions(){
+        return questionRepository.findAll();
+    }
+
+    public List<CommentAndUser> getComments(){
+        return forumRepository.findAll();
+    }
 }

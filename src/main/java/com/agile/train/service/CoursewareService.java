@@ -155,7 +155,11 @@ public class CoursewareService {
         return "";
     }
 
-    public List<UserDownload> getCoursewareDownloads(String coursewareId){
+    public List<UserDownload> getOneFileDownloadsCount(String coursewareId){
         return userDownloadRepository.findAllByCoursewareId(coursewareId);
+    }
+
+    public List<UserDownload> getAllFileDownloadsCount(){
+        return userDownloadRepository.findAll();
     }
 }

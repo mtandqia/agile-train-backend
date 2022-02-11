@@ -71,6 +71,18 @@ public class ForumController {
         return new ResultVM<ParticipationDTO>().success().data(forumService.getParticipation());
     }
 
+    @GetMapping("/all_questions")
+    @ApiOperation(value = "查看参与讨论问题总数量",notes = "TEACHER有权调用此接口")
+    public ResultVM<Integer> allQuestions(){
+        return new ResultVM<Integer>().success().data(forumService.getQuestions().size());
+    }
+
+    @GetMapping("/all_comments")
+    @ApiOperation(value = "查看总回复数量",notes = "TEACHER有权调用此接口")
+    public ResultVM<Integer> allComments(){
+        return new ResultVM<Integer>().success().data(forumService.getComments().size());
+    }
+
     @GetMapping("/unreaded_msg_question_list")
     @ApiOperation(value = "获得存在该用户未读消息的问题列表",notes="TEACHER和STUDENT有权调用此接口")
     public ResultVM<UnreadedMsgDTO> getUnreadedMsgQuestionList(){

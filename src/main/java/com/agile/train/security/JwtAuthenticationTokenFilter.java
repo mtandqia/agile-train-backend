@@ -98,14 +98,14 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     ("POST".equals(method)||"DELETE".equals(method))) {
                 valid = authorities.contains(AuthoritiesConstants.TEACHER);
             }
-            else if(Pattern.matches(".*one_file_count.*|.*all_downloads.*", url)){
+            else if(Pattern.matches(".*one_file_count.*|.*all_downloads.*|.*all_file_count.*", url)){
                 valid = authorities.contains(AuthoritiesConstants.TEACHER);
             }
             //student
             if(Pattern.matches(".*user_downloads.*",url)){
                 valid=authorities.contains(AuthoritiesConstants.STUDENT);
             }
-            else if(Pattern.matches(".*user_count.*",url)){
+            else if(Pattern.matches(".*user_count.*|.*all_comments.*|.*all_questions.*",url)){
                 valid = authorities.contains(AuthoritiesConstants.TEACHER);
             }
             //admin
