@@ -98,7 +98,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setFilterProcessesUrl("/auth/login");
 
         LoginAuthenticationSuccessHandler loginAuthenticationSuccessHandler = new LoginAuthenticationSuccessHandler();
-        LoginAuthenticationFailureHandler loginAuthenticationFailureHandler =new LoginAuthenticationFailureHandler();
+        LoginAuthenticationFailureHandler loginAuthenticationFailureHandler = new LoginAuthenticationFailureHandler();
 
         filter.setAuthenticationSuccessHandler(loginAuthenticationSuccessHandler);
         filter.setAuthenticationFailureHandler(loginAuthenticationFailureHandler);

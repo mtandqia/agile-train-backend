@@ -1,8 +1,10 @@
 package com.agile.train.service;
 
 import com.agile.train.dto.UserDTO;
+import com.agile.train.dto.UserModifyDTO;
 import com.agile.train.entity.User;
-import org.junit.jupiter.api.Test;
+
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,43 +22,47 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-class UserServiceTest {
+public class UserServiceTest {
     @Autowired
     UserService userService;
 
     @Test
-    void getUserWithAuthorities() {
+    public void getUserWithAuthorities() {
         Optional<User> user=userService.getUserWithAuthorities();
         assertTrue(true);
     }
 
     @Test
-    void getAllStudents() {
+    public void getAllStudents() {
         List<User> studentList=userService.getAllStudents();
         assertNotNull(studentList);
     }
 
     @Test
-    void registerUser() {
+    public void registerUser() {
         UserDTO userDTO=new UserDTO();
         userDTO.setEmail("aaabbbddd@qq.com");
         userDTO.setLogin("abd");
         User user= userService.registerUser(userDTO,"password","ROLE_STUDENT");
         assertNotNull(user);
-        userService.deleteUser("abd");
+        UserModifyDTO userModifyDTO=new UserModifyDTO(user.getId(),"abdabd",user.getEmail(),"password");
+        userService.updateUser(userModifyDTO);
+        userService.deleteUser("abdabd");
     }
 
     @Test
-    void getAccountListByRole() {
+    public void getAccountListByRole() {
         List<UserDTO> list=userService.getAccountListByRole("ROLE_ADMIN","",null);
         assertNotNull(list);
     }
 
     @Test
-    void updateUser() {
+    public void updateUser() {
+        assertTrue(true);
     }
 
     @Test
-    void deleteUser() {
+    public void deleteUser() {
+        assertTrue(true);
     }
 }

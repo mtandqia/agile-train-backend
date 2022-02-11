@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -33,6 +34,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/train/admin")
 @Slf4j
+@EnableWebMvc
 public class AccountController {
     @Autowired
     UserService userService;

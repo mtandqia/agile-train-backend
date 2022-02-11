@@ -3,6 +3,7 @@ package com.agile.train.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -39,5 +40,10 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         } else {
             return super.attemptAuthentication(request, response);
         }
+    }
+
+    @Override
+    public AuthenticationManager getAuthenticationManager() {
+        return super.getAuthenticationManager();
     }
 }

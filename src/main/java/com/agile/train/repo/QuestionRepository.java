@@ -16,4 +16,6 @@ public interface QuestionRepository extends MongoRepository<Question, String> {
     Page<Question> findByQuestionTitleLikeOrQuestionContentLikeOrderByModifyTimeDesc(String keyword, String keyword1, Pageable pageable);
 
     Page<Question> findByQuestionTitleLikeOrQuestionContentLikeOrderByModifyTimeAsc(String keyword, String keyword1, Pageable pageable);
+
+    void deleteByQuestionTitle(String hahahaa);
 }

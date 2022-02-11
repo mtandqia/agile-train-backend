@@ -16,4 +16,6 @@ public interface ReadedRepository extends MongoRepository<Readed,String> {
     List<Readed> findByUserLoginNameAndQuestionId(String login, String questionId);
 
     List<Readed> findByUserLoginNameAndReader(String loginName, boolean b);
+
+    void deleteByUserLoginNameAndQuestionId(String qqq, String id);
 }

@@ -3,7 +3,9 @@ package com.agile.train.dto;
 import com.agile.train.constant.Constants;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -16,6 +18,8 @@ import javax.validation.constraints.Size;
  */
 @Data
 @ApiModel(value="用户信息修改类")
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserModifyDTO {
     @NotBlank
     @ApiModelProperty(value="用户id",required = true)
