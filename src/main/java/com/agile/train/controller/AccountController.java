@@ -34,7 +34,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/train/admin")
 @Slf4j
-@EnableWebMvc
+//@EnableWebMvc
 public class AccountController {
     @Autowired
     UserService userService;
