@@ -46,6 +46,13 @@ public class CoursewareController {
         return new ResultVM<String>().success().data(coursewareService.addDownloadFileCnt(coursewareId));
     }
 
+    @GetMapping(value="one_file_count")
+    @ApiOperation(value = "查看课件下载量",notes = "TEACHER有权限调用此接口")
+    @ApiImplicitParam(name="coursewareId", value="课件id")
+    public ResultVM<Integer> getOneFileCounts(@RequestParam String coursewareId){
+        return new ResultVM<Integer>().success().data(coursewareService.getCoursewareDownloads(coursewareId).size());
+    }
+
     @DeleteMapping(value = "")
     @ApiOperation(value = "删除课件", notes = "只有TEACHER有权限调用此接口删除课件")
     @ApiImplicitParam(name = "coursewareId", value = "课件id")
@@ -60,7 +67,7 @@ public class CoursewareController {
     }
 
     @GetMapping(value = "/all_downloads")
-    @ApiOperation(value = "获得总体学习进度", notes = "TEACHER有权调用")
+    @ApiOperation(value = "获得学员的总体学习进度", notes = "TEACHER有权调用")
     public ResultVM<Double> getAllDownloads(){
         return coursewareService.getAllDownloads();
     }

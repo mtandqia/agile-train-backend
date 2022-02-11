@@ -154,4 +154,8 @@ public class CoursewareService {
         }
         return "";
     }
+
+    public List<UserDownload> getCoursewareDownloads(String coursewareId){
+        return userDownloadRepository.findAllByCoursewareId(coursewareId);
+    }
 }

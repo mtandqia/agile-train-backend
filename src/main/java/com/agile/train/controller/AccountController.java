@@ -110,6 +110,12 @@ public class AccountController {
         return userService.updateUser(dto);
     }
 
+    @GetMapping("/user_count")
+    @ApiOperation(value = "学员人数", notes = "TEACHER有权调用")
+    public ResultVM<Integer> countUser(){
+        return new ResultVM<Integer>().success().data(userService.getAllStudents().size());
+    }
+
     private static boolean checkPasswordLength(String password) {
         return !StringUtils.isEmpty(password) &&
                 password.length() >= ManagedUserVM.PASSWORD_MIN_LENGTH &&
