@@ -6,7 +6,8 @@ import com.agile.train.service.ForumService;
 import com.agile.train.service.UserService;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.Test;
+//import org.junit.Test;
+import org.testng.annotations.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,7 +50,7 @@ public class ForumControllerTest {
 
     @Before
     public void setupMockMvc(){
-        mvc = MockMvcBuilders.webAppContextSetup(wac).build(); //初始化MockMvc对象
+        mvc = MockMvcBuilders.webAppContextSetup(wac).build(); //鍒濆鍖朚ockMvc瀵硅薄
 
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken("111222333@qq.com",new String[]{"111222333","ROLE_STUDENT"});
         Authentication authentication=customAuthenticationFilter.getAuthenticationManager().authenticate(authRequest);

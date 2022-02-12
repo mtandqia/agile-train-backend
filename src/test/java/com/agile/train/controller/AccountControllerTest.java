@@ -5,7 +5,8 @@ import com.agile.train.entity.User;
 import com.agile.train.security.CustomAuthenticationFilter;
 import com.agile.train.service.UserService;
 import org.junit.Before;
-import org.junit.Test;
+//import org.junit.Test;
+import org.testng.annotations.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,7 +46,7 @@ public class AccountControllerTest {
 
     @Before
     public void setupMockMvc(){
-        mvc = MockMvcBuilders.webAppContextSetup(wac).build(); //初始化MockMvc对象
+        mvc = MockMvcBuilders.webAppContextSetup(wac).build(); //鍒濆鍖朚ockMvc瀵硅薄
 
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken("934808050@qq.com",new String[]{"934808050","ROLE_ADMIN"});
         Authentication authentication=customAuthenticationFilter.getAuthenticationManager().authenticate(authRequest);
