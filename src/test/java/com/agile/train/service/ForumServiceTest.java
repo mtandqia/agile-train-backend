@@ -10,8 +10,8 @@ import com.agile.train.repo.ForumRepository;
 import com.agile.train.repo.QuestionRepository;
 import com.agile.train.repo.ReadedRepository;
 import com.agile.train.security.CustomAuthenticationFilter;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 //import org.testng.annotations.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ForumServiceTest {
+class ForumServiceTest {
     @Autowired
     ForumService forumService;
     @Autowired
@@ -43,15 +43,15 @@ public class ForumServiceTest {
     @Autowired
     ReadedRepository readedRepository;
 
-    @Before
-    public void before(){
+    @BeforeEach
+    void before(){
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken("111222333@qq.com",new String[]{"111222333","ROLE_STUDENT"});
         Authentication authentication=customAuthenticationFilter.getAuthenticationManager().authenticate(authRequest);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     @Test
-    public void addQuestion() {
+    void addQuestion() {
         QuestionAddDTO questionAddDTO=new QuestionAddDTO("HAHAHAA","AA");
         Question question = forumService.addQuestion(questionAddDTO);
         assertNotNull(question);
@@ -59,7 +59,7 @@ public class ForumServiceTest {
     }
 
     @Test
-    public void addComment() {
+    void addComment() {
         QuestionAddDTO questionAddDTO=new QuestionAddDTO("HAHAHAA","AA");
         Question question = forumService.addQuestion(questionAddDTO);
         CommentAddDTO commentAddDTO=new CommentAddDTO("comment",null,question.getId(),"qqq");
@@ -72,7 +72,7 @@ public class ForumServiceTest {
     }
 
     @Test
-    public void getAllComment() {
+    void getAllComment() {
         QuestionAddDTO questionAddDTO=new QuestionAddDTO("HAHAHAA","AA");
         Question question = forumService.addQuestion(questionAddDTO);
         CommentAddDTO commentAddDTO=new CommentAddDTO("comment",null,question.getId(),"qqq");
@@ -86,7 +86,7 @@ public class ForumServiceTest {
     }
 
     @Test
-    public void getQuestionByKeyword() {
+    void getQuestionByKeyword() {
         QuestionAddDTO questionAddDTO=new QuestionAddDTO("HAHAHAA","AA");
         Question question = forumService.addQuestion(questionAddDTO);
         assertNotNull(forumService.getQuestionByKeyword("AA","desc",null));
@@ -94,13 +94,13 @@ public class ForumServiceTest {
     }
 
     @Test
-    public void getParticipation() {
+    void getParticipation() {
         ParticipationDTO participationDTO= forumService.getParticipation();
         assertNotNull(participationDTO);
     }
 
     @Test
-    public void getUnreadedMsgQuestionList() {
+    void getUnreadedMsgQuestionList() {
         QuestionAddDTO questionAddDTO=new QuestionAddDTO("HAHAHAA","AA");
         Question question = forumService.addQuestion(questionAddDTO);
         CommentAddDTO commentAddDTO=new CommentAddDTO("comment",null,question.getId(),"111");

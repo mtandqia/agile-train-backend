@@ -4,8 +4,8 @@ import com.agile.train.dto.UserDTO;
 import com.agile.train.entity.User;
 import com.agile.train.security.CustomAuthenticationFilter;
 import com.agile.train.service.UserService;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 //import org.testng.annotations.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AccountControllerTest {
+class AccountControllerTest {
     @Autowired
     private WebApplicationContext wac;
     private MockMvc mvc;
@@ -44,8 +44,8 @@ public class AccountControllerTest {
 
     MediaType MEDIA_TYPE_JSON_UTF8 = new MediaType("application", "json", StandardCharsets.UTF_8);
 
-    @Before
-    public void setupMockMvc(){
+    @BeforeEach
+    void setupMockMvc(){
         mvc = MockMvcBuilders.webAppContextSetup(wac).build(); //初始化MockMvc对象
 
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken("934808050@qq.com",new String[]{"934808050","ROLE_ADMIN"});
@@ -55,7 +55,7 @@ public class AccountControllerTest {
 
 
     @Test
-    public void registerAccount() throws Exception {
+    void registerAccount() throws Exception {
         String json="{\"login\":\"HAHAHAA\",\"password\":\"Spring\",\"email\":\"999888771@qq.ccom\",\"role\":\"ROLE_STUDENT\"}";
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/train/admin/register");
         request.content(json);
@@ -69,7 +69,7 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void getAccount() throws Exception {
+    void getAccount() throws Exception {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/train/admin/account_own");
         //request.content(json);
         request.locale(Locale.CHINESE);
@@ -81,7 +81,7 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void getAccountByRole() throws Exception {
+    void getAccountByRole() throws Exception {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/train/admin/account_list?role=ROLE_ADMIN");
         //request.content(json);
         request.locale(Locale.CHINESE);
@@ -93,7 +93,7 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void deleteAccount() throws Exception{
+    void deleteAccount() throws Exception{
         UserDTO userDTO=new UserDTO();
         userDTO.setEmail("aaabbbddd@qq.com");
         userDTO.setLogin("abd");
@@ -110,7 +110,7 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void updateAccount() throws Exception {
+    void updateAccount() throws Exception {
         UserDTO userDTO=new UserDTO();
         userDTO.setEmail("aaabbbddd@qq.com");
         userDTO.setLogin("abd");
