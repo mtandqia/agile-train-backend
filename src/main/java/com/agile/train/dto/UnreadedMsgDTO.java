@@ -13,7 +13,6 @@ import java.util.Set;
  * @date 2022/2/10 17:00
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @ApiModel("未读消息封装")
 public class UnreadedMsgDTO {

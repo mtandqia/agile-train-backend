@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
  * @date 2022/2/2 23:26
  */
 @Data
-@NoArgsConstructor
 @ApiModel(value = "论坛问题信息封装")
 public class QuestionDTO {
 

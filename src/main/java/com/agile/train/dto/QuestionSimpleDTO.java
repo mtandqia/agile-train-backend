@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
  * @date 2022/2/10 15:00
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @ApiModel(value="未读消息问题信息简单封装")
 public class QuestionSimpleDTO {

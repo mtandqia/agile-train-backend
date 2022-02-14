@@ -3,6 +3,7 @@ package com.agile.train.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Size;
@@ -11,8 +12,8 @@ import javax.validation.constraints.Size;
  * @author Mengting Lu
  * @date 2022/2/2 19:35
  */
+@EqualsAndHashCode(callSuper = true)
 @ApiModel(value = "登录需要的参数")
-@NoArgsConstructor
 @Data
 public class ManagedUserVM extends UserDTO {
 

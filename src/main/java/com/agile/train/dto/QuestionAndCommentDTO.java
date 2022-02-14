@@ -14,7 +14,6 @@ import java.util.List;
  * @date 2022/2/2 23:26
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @ApiModel(value = "论坛问题和评论类")
 public class QuestionAndCommentDTO {
