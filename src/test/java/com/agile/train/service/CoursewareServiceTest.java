@@ -1,45 +1,90 @@
 package com.agile.train.service;
 
-import org.junit.Test;
 
+import com.agile.train.entity.Courseware;
+import com.agile.train.repo.CoursewareRepository;
+import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.InputStream;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  * @author wqy
  * @date 2022/2/14 10:57
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class CoursewareServiceTest {
+    @Autowired
+    CoursewareService coursewareService;
+
+    @Autowired
+    CoursewareRepository coursewareRepository;
+
     @Test
-    public void uploadFile() {
+    void uploadFile() throws Exception{
+        String filename = "test.pdf";
+        InputStream inStream = getClass().getClassLoader().getResourceAsStream(filename);
+        MultipartFile file = new MockMultipartFile("file", "test.pdf", "pdf", inStream);
+        coursewareService.uploadFile(file);
     }
 
     @Test
-    public void downloadFile() {
+    void downloadFile() {
+        List<Courseware> coursewareList = coursewareRepository.findAll();
+        Courseware courseware = coursewareList.get(0);
+        assertNotNull(courseware);
+        String id = courseware.getId();
+        assertNotNull(coursewareService.downloadFile(id));
     }
 
     @Test
-    public void getUserDownloads() {
+    void getUserDownloads() {
+        assertNotNull(coursewareService.getUserDownloads());
     }
 
     @Test
-    public void getAllDownloads() {
+    void getAllDownloads() {
+        assertNotNull(coursewareService.getAllDownloads());
     }
 
     @Test
-    public void getAllCoursewares() {
+    void getAllCoursewares() {
+        assertNotNull(coursewareService.getAllCoursewares());
     }
 
     @Test
-    public void deleteFile() {
+    void deleteFile() {
+        coursewareService.deleteFile("aaa");
     }
 
     @Test
-    public void addDownloadFileCnt() {
+    void addDownloadFileCnt() {
+        List<Courseware> coursewareList = coursewareRepository.findAll();
+        Courseware courseware = coursewareList.get(0);
+        assertNotNull(courseware);
+        String id = courseware.getId();
+        assertNotNull(coursewareService.addDownloadFileCnt(id));
     }
 
     @Test
-    public void getOneFileDownloadsCount() {
+    void getOneFileDownloadsCount() {
+        List<Courseware> coursewareList = coursewareRepository.findAll();
+        Courseware courseware = coursewareList.get(0);
+        assertNotNull(courseware);
+        String id = courseware.getId();
+        assertNotNull(coursewareService.getOneFileDownloadsCount(id));
     }
 
     @Test
-    public void getAllFileDownloadsCount() {
+    void getAllFileDownloadsCount() {
+        assertNotNull(coursewareService.getAllFileDownloadsCount());
     }
 }

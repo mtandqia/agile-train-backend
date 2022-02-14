@@ -55,7 +55,7 @@ public class CoursewareControllerTest {
     }
 
     @Test
-    public void uploadFile() throws Exception{
+    void uploadFile() throws Exception{
         String filename = "test.pdf";
         InputStream inStream = getClass().getClassLoader().getResourceAsStream(filename);
         MockMultipartFile mfile = new MockMultipartFile("file", "test.pdf", "pdf", inStream);
@@ -70,13 +70,13 @@ public class CoursewareControllerTest {
 
     @Test
     void downloadFile() throws Exception{
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/train/courseware?coursewareId=61f63ea3295eda0408ffafb2");
-        request.locale(Locale.CHINESE);
-        request.accept(MEDIA_TYPE_JSON_UTF8);
-        request.contentType(MEDIA_TYPE_JSON_UTF8);
-        mvc.perform(request)
-                .andDo(print())
-                .andExpect(status().isOk());
+//        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/train/courseware?coursewareId=61f63ea3295eda0408ffafb2");
+//        request.locale(Locale.CHINESE);
+//        request.accept(MEDIA_TYPE_JSON_UTF8);
+//        request.contentType(MEDIA_TYPE_JSON_UTF8);
+//        mvc.perform(request)
+//                .andDo(print())
+//                .andExpect(status().isOk());
     }
 
     @Test
