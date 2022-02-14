@@ -22,4 +22,6 @@ public interface ForumRepository extends MongoRepository<CommentAndUser, String>
 
     @Query(value = "{'loginName':/?0/}",fields="{'questionId':1,'_id':0}")
     List<String> findQuestionIdList(String loginName);
+
+    void deleteByCommentContent(String hahahaa);
 }

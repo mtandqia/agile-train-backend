@@ -110,4 +110,14 @@ class ForumServiceTest {
         readedRepository.deleteByUserLoginNameAndQuestionId("111",question.getId());
         forumRepository.deleteById(commentAndUser.getId());
     }
+
+    @Test
+    void getQuestions(){
+        assertNotNull(forumService.getQuestions());
+    }
+
+    @Test
+    void getComments(){
+        assertNotNull(forumService.getComments());
+    }
 }
