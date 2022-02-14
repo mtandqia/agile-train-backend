@@ -70,7 +70,7 @@ public class CoursewareControllerTest {
 
     @Test
     void downloadFile() throws Exception{
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/train/courseware?coursewareId=6203d03244641b60f0da8960");
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/train/courseware?coursewareId=61f63ea3295eda0408ffafb2");
         request.locale(Locale.CHINESE);
         request.accept(MEDIA_TYPE_JSON_UTF8);
         request.contentType(MEDIA_TYPE_JSON_UTF8);
