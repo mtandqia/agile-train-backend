@@ -49,6 +49,7 @@ class UserServiceTest {
         UserModifyDTO userModifyDTO=new UserModifyDTO(user.getId(),"abdabd",user.getEmail(),"password");
         userService.updateUser(userModifyDTO);
         userService.deleteUser("abdabd");
+        g
     }
 
     @Test
