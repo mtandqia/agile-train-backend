@@ -1,12 +1,17 @@
 package com.agile.train.controller;
 
 import com.agile.train.dto.ResultVM;
+import com.agile.train.dto.UserProgressDTO;
 import com.agile.train.entity.Courseware;
 import com.agile.train.service.CoursewareService;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,6 +69,19 @@ public class CoursewareController {
     @ApiImplicitParam(name = "coursewareId", value = "课件id")
     public void deleteFile(@RequestParam String coursewareId) throws IOException {
         coursewareService.deleteFile(coursewareId);
+    }
+
+    @GetMapping(value = "/user_list_progress")
+    @ApiOperation(value = "获得学生列表及每个学生对应的学习进度", notes = "TEACHER有权调用")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value="页码（从0开始）",name = "page",defaultValue = "0"),
+            @ApiImplicitParam(value="页的大小",name = "size",defaultValue = "10"),
+            @ApiImplicitParam(value="搜索关键词（用户名）",name = "keyword")
+    })
+    public ResultVM<List<UserProgressDTO>> getUserProgressList(@RequestParam(defaultValue = "",required = false) String keyword,
+                                                    @PageableDefault(sort = {"last_modified_time"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        List<UserProgressDTO> userProgressDTOList = coursewareService.getUserProgressDTOList(keyword,pageable);
+        return new ResultVM<List<UserProgressDTO>>().success().data(userProgressDTOList);
     }
 
     @GetMapping(value = "/user_downloads")

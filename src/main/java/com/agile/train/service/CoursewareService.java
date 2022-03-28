@@ -2,6 +2,8 @@ package com.agile.train.service;
 
 import com.agile.train.dto.ResultVM;
 import com.agile.train.constant.PathConstants;
+import com.agile.train.dto.UserDTO;
+import com.agile.train.dto.UserProgressDTO;
 import com.agile.train.entity.Courseware;
 import com.agile.train.entity.User;
 import com.agile.train.entity.UserDownload;
@@ -12,6 +14,7 @@ import com.agile.train.repo.CoursewareRepository;
 import com.agile.train.repo.UserDownloadRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -113,6 +117,12 @@ public class CoursewareService {
         return null;
     }
 
+    public Double getUserDownloadsById(String id) {
+        long coursewareCnt=coursewareRepository.count();
+        long userDownloadCnt = userDownloadRepository.countByUserId(id);
+        return (double) Math.round((double) userDownloadCnt / coursewareCnt * 1000) / 1000;
+    }
+
     public ResultVM<Double> getAllDownloads(){
         long coursewareCnt=coursewareRepository.count();
         List<User> students = userService.getAllStudents();
@@ -153,6 +163,16 @@ public class CoursewareService {
             return "Succeed adding download counts, now is "+cnt+".";
         }
         return "";
+    }
+
+    public List<UserProgressDTO> getUserProgressDTOList(String keyword, Pageable pageable){
+        List<UserDTO> userDTOList = userService.getAccountListByRole("ROLE_STUDENT",keyword,pageable);
+        List<UserProgressDTO> userProgressDTOList = new ArrayList<UserProgressDTO>();
+        for(int i = 0; i < userDTOList.size(); i++){
+            UserProgressDTO userProgressDTO = new UserProgressDTO(userDTOList.get(i), getUserDownloadsById(userDTOList.get(i).getId()));
+            userProgressDTOList.add(userProgressDTO);
+        }
+        return userProgressDTOList;
     }
 
     public List<UserDownload> getOneFileDownloadsCount(String coursewareId){
