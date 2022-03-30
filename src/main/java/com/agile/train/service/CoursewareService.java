@@ -177,9 +177,9 @@ public class CoursewareService {
 
     public List<UserProgressDTO> getUserProgressDTOList(String keyword, Pageable pageable){
         List<UserDTO> userDTOList = userService.getAccountListByRole("ROLE_STUDENT",keyword,pageable);
-        List<UserProgressDTO> userProgressDTOList = new ArrayList<UserProgressDTO>();
-        for(int i = 0; i < userDTOList.size(); i++){
-            UserProgressDTO userProgressDTO = new UserProgressDTO(userDTOList.get(i), getUserDownloadsById(userDTOList.get(i).getId()));
+        List<UserProgressDTO> userProgressDTOList = new ArrayList<>();
+        for (UserDTO userDTO : userDTOList) {
+            UserProgressDTO userProgressDTO = new UserProgressDTO(userDTO, getUserDownloadsById(userDTO.getId()));
             userProgressDTOList.add(userProgressDTO);
         }
         return userProgressDTOList;
