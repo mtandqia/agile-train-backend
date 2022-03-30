@@ -94,11 +94,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                         authorities.contains(AuthoritiesConstants.TEACHER);
             }
             //teacher, only teachers can upload and delete files
-            if (Pattern.matches(".*courseware.*", url)&&
-                    ("POST".equals(method)||"DELETE".equals(method))) {
-                valid = authorities.contains(AuthoritiesConstants.TEACHER);
-            }
-            else if(Pattern.matches(".*one_file_count.*|.*all_downloads.*|.*all_file_count.*", url)){
+            boolean hasTeacherRights=(Pattern.matches(".*courseware.*", url)&& ("POST".equals(method)||"DELETE".equals(method)))
+                    ||Pattern.matches(".*one_file_count.*|.*all_downloads.*|.*all_file_count.*", url);
+            if (hasTeacherRights) {
                 valid = authorities.contains(AuthoritiesConstants.TEACHER);
             }
             //student

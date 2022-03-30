@@ -1,5 +1,6 @@
 package com.agile.train.service;
 
+import com.agile.train.dto.CoursewareWithDownloadInfo;
 import com.agile.train.dto.ResultVM;
 import com.agile.train.constant.PathConstants;
 import com.agile.train.dto.UserDTO;
@@ -135,9 +136,18 @@ public class CoursewareService {
         return new ResultVM<Double>().success().data((double)Math.round((double)downloadCnt / coursewareCnt / students.size() * 1000) / 1000);
     }
 
-    public ResultVM<List<Courseware>> getAllCoursewares(){
-        List<Courseware> coursewares = coursewareRepository.findAll();
-        return new ResultVM<List<Courseware>>().success().data(coursewares);
+    public ResultVM<List<CoursewareWithDownloadInfo>> getAllCoursewares(){
+        Optional<User> opt=userService.getUserWithAuthorities();
+        if(opt.isPresent()) {
+            List<Courseware> coursewares = coursewareRepository.findAll();
+            List<CoursewareWithDownloadInfo> res = new ArrayList<>();
+            for (Courseware courseware : coursewares) {
+                UserDownload userDownload = userDownloadRepository.findOneByCoursewareIdAndUserId(courseware.getId(), opt.get().getId());
+                res.add(new CoursewareWithDownloadInfo(courseware, userDownload != null));
+            }
+            return new ResultVM<List<CoursewareWithDownloadInfo>>().success().data(res);
+        }
+        return null;
     }
 
     public void deleteFile(String id) {

@@ -1,5 +1,6 @@
 package com.agile.train.controller;
 
+import com.agile.train.dto.CoursewareWithDownloadInfo;
 import com.agile.train.dto.ResultVM;
 import com.agile.train.dto.UserProgressDTO;
 import com.agile.train.entity.Courseware;
@@ -98,7 +99,7 @@ public class CoursewareController {
 
     @GetMapping(value = "/list_all")
     @ApiOperation(value="获得所有课件列表",notes = "TEACHER和STUDENT有权调用")
-    public ResultVM<List<Courseware>> getAllCoursewares(){
+    public ResultVM<List<CoursewareWithDownloadInfo>> getAllCoursewares(){
         return coursewareService.getAllCoursewares();
     }
 }
