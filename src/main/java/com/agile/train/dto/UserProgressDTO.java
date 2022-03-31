@@ -1,7 +1,6 @@
 package com.agile.train.dto;
 
 import com.agile.train.constant.Constants;
-import com.agile.train.entity.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -56,8 +55,8 @@ public class UserProgressDTO {
         this.email = user.getEmail();
         this.imageUrl = user.getImageUrl();
         this.langKey = user.getLangKey();
-        this.createdDate = user.getCreatedDate().toString();
-        this.lastModifiedDate = user.getLastModifiedDate().toString();
+        this.createdDate = user.getCreatedDate();
+        this.lastModifiedDate = user.getLastModifiedDate();
         this.authorities = user.getAuthorities();
         this.progress = progress;
     }

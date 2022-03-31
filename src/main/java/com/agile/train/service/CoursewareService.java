@@ -66,10 +66,8 @@ public class CoursewareService {
 
             return new ResultVM<Courseware>().success().data(courseware);
         } catch (IOException e) {
-            log.info("context", e);
             return null;
         } catch (NullPointerException e){
-            log.info("context", e);
             throw new NullParameterException();
         }
     }

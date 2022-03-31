@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -68,7 +67,7 @@ public class CoursewareController {
     @DeleteMapping(value = "")
     @ApiOperation(value = "删除课件", notes = "只有TEACHER有权限调用此接口删除课件")
     @ApiImplicitParam(name = "coursewareId", value = "课件id")
-    public void deleteFile(@RequestParam String coursewareId) throws IOException {
+    public void deleteFile(@RequestParam String coursewareId){
         coursewareService.deleteFile(coursewareId);
     }
 

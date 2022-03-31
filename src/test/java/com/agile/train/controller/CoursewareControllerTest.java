@@ -1,7 +1,5 @@
 package com.agile.train.controller;
 
-import com.agile.train.constant.PathConstants;
-import com.agile.train.entity.Courseware;
 import com.agile.train.security.CustomAuthenticationFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,11 +18,9 @@ import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequ
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.Locale;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;

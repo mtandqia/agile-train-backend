@@ -31,8 +31,6 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     UserRepository userRepository;
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
 
     public Optional<User> getUserWithAuthorities() {
         return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneByLogin);

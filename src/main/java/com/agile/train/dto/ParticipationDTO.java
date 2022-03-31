@@ -2,7 +2,6 @@ package com.agile.train.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * @author Mengting Lu

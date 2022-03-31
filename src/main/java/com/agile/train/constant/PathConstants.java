@@ -7,7 +7,6 @@ package com.agile.train.constant;
 public final class PathConstants {
     //存储位置
     public static final String PATH="/root/lmt/file/";
-    //public static final String PATH="D:\\PICTTT\\";
 
     public static final String URL="/train/file/";
 
