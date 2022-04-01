@@ -120,6 +120,18 @@ public class CoursewareControllerTest {
     }
 
     @Test
+    void getUserProgressList() throws Exception{
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/train/courseware/user_list_progress");
+        //request.content(json);
+        request.locale(Locale.CHINESE);
+        request.accept(MEDIA_TYPE_JSON_UTF8);
+        request.contentType(MEDIA_TYPE_JSON_UTF8);
+        mvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void getUserDownloads() throws Exception{
         mvc = MockMvcBuilders.webAppContextSetup(wac).build();
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken("111222333@qq.com",new String[]{"111222333","ROLE_STUDENT"});

@@ -1,6 +1,7 @@
 package com.agile.train.service;
 
 
+import com.agile.train.dto.UserProgressDTO;
 import com.agile.train.entity.Courseware;
 import com.agile.train.repo.CoursewareRepository;
 import org.junit.jupiter.api.Test;
@@ -72,6 +73,12 @@ public class CoursewareServiceTest {
         assertNotNull(courseware);
         String id = courseware.getId();
         assertNotNull(coursewareService.addDownloadFileCnt(id));
+    }
+
+    @Test
+    void getUserProgressDTOList() {
+        List<UserProgressDTO> list=coursewareService.getUserProgressDTOList("",null);
+        assertNotNull(list);
     }
 
     @Test
