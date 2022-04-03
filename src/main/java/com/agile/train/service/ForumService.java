@@ -64,8 +64,6 @@ public class ForumService {
         if(optional.isPresent()) {
             String loginName = optional.get().getLogin();
             String nowTime=LocalDateTime.now().toString().replace("T"," ").substring(0,19);
-            System.out.println(commentDTO.getQuestionId());
-            System.out.println(questionRepository.findAll());
             Optional<Question> question=questionRepository.findById(commentDTO.getQuestionId());
             if(question.isPresent()){
                 Question value=question.get();
