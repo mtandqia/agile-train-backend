@@ -19,5 +19,5 @@ public class UnreadedMsgDTO {
     private int count;
 
     @ApiModelProperty(value="未读消息列表")
-    private Set<QuestionSimpleDTO> set;
+    private Set<QuestionDTO> set;
 }
