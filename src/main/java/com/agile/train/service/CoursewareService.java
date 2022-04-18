@@ -106,32 +106,45 @@ public class CoursewareService {
     }
 
     public ResultVM<Double> getUserDownloads() {
-        long coursewareCnt=coursewareRepository.count();
         Optional<User> opt=userService.getUserWithAuthorities();
         if(opt.isPresent()) {
-            long userDownloadCnt = userDownloadRepository.countByUserId(opt.get().getId());
-            return new ResultVM<Double>().success().data(
-                    (double) Math.round((double) userDownloadCnt / coursewareCnt * 1000) / 1000);
+            List<Courseware> coursewares = coursewareRepository.findAll();
+            int count = 0;
+            int countd = 0;
+            for (Courseware courseware : coursewares) {
+                UserDownload userDownload = userDownloadRepository.findOneByCoursewareIdAndUserId(courseware.getId(), opt.get().getId());
+                count++;
+                if(userDownload != null){
+                    countd++;
+                }
+            }
+            return new ResultVM<Double>().success().data((double) Math.round((double) countd / count * 1000) / 1000);
         }
         return null;
     }
 
     public Double getUserDownloadsById(String id) {
-        long coursewareCnt=coursewareRepository.count();
-        long userDownloadCnt = userDownloadRepository.countByUserId(id);
-        return (double) Math.round((double) userDownloadCnt / coursewareCnt * 1000) / 1000;
+        List<Courseware> coursewares = coursewareRepository.findAll();
+        int count = 0;
+        int countd = 0;
+        for (Courseware courseware : coursewares) {
+            UserDownload userDownload = userDownloadRepository.findOneByCoursewareIdAndUserId(courseware.getId(), id);
+            count++;
+            if(userDownload != null){
+                countd++;
+            }
+        }
+        return (double) Math.round((double) countd / count * 1000) / 1000;
     }
 
     public ResultVM<Double> getAllDownloads(){
-        long coursewareCnt=coursewareRepository.count();
         List<User> students = userService.getAllStudents();
-        long downloadCnt = 0;
+        Double sum = 0.0;
         for(int i = 0; i < students.size(); i++){
             User st = students.get(i);
-            long userDownloadCnt = userDownloadRepository.countByUserId(st.getId());
-            downloadCnt += userDownloadCnt;
+            sum += getUserDownloadsById(st.getId());
         }
-        return new ResultVM<Double>().success().data((double)Math.round((double)downloadCnt / coursewareCnt / students.size() * 1000) / 1000);
+        return new ResultVM<Double>().success().data((double)Math.round(sum / students.size() * 1000) / 1000);
     }
 
     public ResultVM<List<CoursewareWithDownloadInfo>> getAllCoursewares(){
@@ -150,6 +163,7 @@ public class CoursewareService {
 
     public void deleteFile(String id) {
         coursewareRepository.deleteById(id);
+        userDownloadRepository.deleteByCoursewareId(id);
     }
 
     public String addDownloadFileCnt(String id) {

@@ -18,4 +18,6 @@ public interface UserDownloadRepository extends MongoRepository<UserDownload,Str
     UserDownload findOneByCoursewareIdAndUserId(String id, String userId);
 
     List<UserDownload> findAllByCoursewareId(String coursewareId);
+
+    void deleteByCoursewareId(String coursewareId);
 }
